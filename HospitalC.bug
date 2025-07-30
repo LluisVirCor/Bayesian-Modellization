@@ -1,0 +1,11 @@
+
+model {
+
+ for (i in 1:t)  {
+   y[i] ~ dbin(p[i], n[i])
+   p[i] ~ dbeta(a,b)
+  }
+ a ~ dgamma(0.001, 0.001)
+ b ~ dgamma(0.001, 0.001)
+
+}

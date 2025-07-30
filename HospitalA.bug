@@ -1,0 +1,10 @@
+
+model {
+
+ for (i in 1:t)  {
+   y[i] ~ dbin(p, n[i])
+  }
+
+ p ~ dbeta(1,1)
+
+}

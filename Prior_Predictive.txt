@@ -1,0 +1,72 @@
+#########################################################
+################## Pressió sanguínea ###########################
+#########################################################
+pressió <- c(98, 160, 136, 128, 130, 114, 123, 134, 128, 107, 123, 125, 129, 132, 154, 115, 126, 132,136, 130)
+
+##priori
+n<-length(pressió)
+priori <- c(125,6)
+suport <- seq(100, 150, 0.01)
+dist.normal <- dnorm(suport, priori[1], priori[2])
+plot(suport,dist.normal,type = "l")
+title(paste("Distribució Normal(Mitjana=",priori[1],"Sigma=",priori[2],")"))
+
+
+##Versemblança
+suport <- seq(100,150,0.01)
+vers <- rep(0, length(suport))
+Int.vers <- 0
+sum<-0
+for (j in 1:n){
+ sum<-sum+(pressió[j]-mean(pressió))^2
+}
+for (i in 1:length(suport)) {
+ vers[i] <- exp((n/2)*log(1/(2*pi*priori[2]^2))-((sum+n*(mean(pressió)-suport[i])^2)/(2*priori[2]^2)))
+ Int.vers <- Int.vers + vers[i]*(suport[2]-suport[1])
+}
+vers.resc <- vers/Int.vers
+dist.priori <- dnorm(suport, priori[1], priori[2])
+plot(suport,dist.priori, ylab="", xlab="mu",type="l", ylim=c(0, max(dist.priori,vers.resc)), lty=1)
+lines(suport, vers.resc, lty=2)
+legend("topright", c("priori","versemblança"), lty = c(1,2))
+title("priori i versemblança")
+
+##Simulació predictiva a priori
+sim.priori <- rnorm(100000, priori[1], priori[2])
+sim.pre.priori <- rnorm(100000, sim.priori , 8)
+hist(sim.pre.priori, freq=F,breaks=40)
+lines(density(sim.pre.priori))
+
+
+
+#########################################################
+################## Bombetes ###########################
+#########################################################
+
+bombetes<-c(26293, 10123, 3168, 23340, 5459, 13143, 10270, 1699, 15061, 29010)
+n <- length(bombetes)
+
+##Paràmetres de la priori
+
+priori <- c(alpha = 0.0001, beta = 0.001)
+suport <- seq(from = 0.0000001, to =0.0002, length = 1000)
+dist.priori <- dgamma(suport, priori[1], priori[2])
+
+
+##Versemblança
+
+vers <- rep(0, length(suport))
+Int.vers <- 0
+
+for (i in 1:length(suport)) {
+ vers[i] <- exp(n*log(suport[i]) - suport[i]*sum(bombetes))
+ Int.vers <- Int.vers + vers[i]*(suport[2]-suport[1])
+}
+
+ vers.res <- vers/Int.vers
+
+
+par(mfrow=c(1,1))
+plot(suport, vers.res, ty="l")
+lines(suport, dist.priori, lty=2)
+legend("topright", c("a priori", "versemblança"), lty=c(2,1))
