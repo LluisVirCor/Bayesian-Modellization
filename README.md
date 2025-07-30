@@ -8,4 +8,4 @@ R scripts using Bayesian techinques.
 Some projects may require WinBugs installation.
 
 ## See example in live
-- [ENLACEGITHUBPAGES](ENLACEGITHUBPAGES)
+- [https://lluisvircor.github.io/Bayesian-Modellization/](https://lluisvircor.github.io/Bayesian-Modellization/)
